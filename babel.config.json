@@ -4,6 +4,7 @@
       "@babel/env",
       {
         "targets": {
+          "ECMAScript": "ES2018",
           "node": "10"
         }
       }

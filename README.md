@@ -35,6 +35,10 @@ const knex = Knex({
     user     : process.env.DB_USERNAME,
     password : process.env.DB_PASSWORD,
   },
+  serverlessPostgres: {
+    debug: true,
+    delayMs: 3000,
+  }
 });
 
 exports.run = function () {

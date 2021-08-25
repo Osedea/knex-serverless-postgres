@@ -1,31 +1,39 @@
-import PostgresqlClient from 'knex/lib/dialects/postgres';
+const PostgresqlClient = require('knex/lib/dialects/postgres');
+const ServerlessClient = require('serverless-postgres');
 
-export default class ServerlessPostgresqlClient extends PostgresqlClient {
+class ServerlessPostgresqlClient extends PostgresqlClient {
   constructor(config) {
     super(config);
 
-    this.postgres = new ServerlessClient({
+    this.serverlessConfig = {
       ...config.connection,
-      ...config.extra.serverlessPostgres,
-    });
+      ...(config.serverlessPostgres ?  config.serverlessPostgres : {}),
+    };
   }
 
   get dialect() {
     return 'serverlessPostgres';
   }
+
   get driverName() {
     return 'serverlessPostgres';
   }
 
-  acquireConnection() {
-    return Promise.resolve(this.postgres);
+  async acquireConnection() {
+    this.client = new ServerlessClient(this.serverlessConfig);
+    await this.client.connect();
+    return this.client;
   }
 
-  releaseConnection() {
-    return this.postgres.clean();
+  releaseConnection(connection) {
+    return connection.clean();
   }
 
   destroy() {
-    return this.postgres.end();
+    return this.client.end();
   }
+}
+
+module.exports = {
+  default: ServerlessPostgresqlClient,
 }
