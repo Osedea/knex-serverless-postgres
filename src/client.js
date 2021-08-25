@@ -1,24 +1,31 @@
-import MysqlClient from 'knex/lib/dialects/mysql';
+import PostgresqlClient from 'knex/lib/dialects/postgres';
 
-export default class ServerlessMysqlClient extends MysqlClient {
+export default class ServerlessPostgresqlClient extends PostgresqlClient {
   constructor(config) {
     super(config);
 
-    this.mysql = config.mysql;
+    this.postgres = new ServerlessClient({
+      ...config.connection,
+      ...config.extra.serverlessPostgres,
+    });
   }
 
   get dialect() {
-    return 'serverlessMysql';
+    return 'serverlessPostgres';
   }
   get driverName() {
-    return 'serverlessMysql';
+    return 'serverlessPostgres';
   }
 
   acquireConnection() {
-    return Promise.resolve(this.mysql);
+    return Promise.resolve(this.postgres);
   }
 
   releaseConnection() {
-    return this.mysql.end();
+    return this.postgres.clean();
+  }
+
+  destroy() {
+    return this.postgres.end();
   }
 }
