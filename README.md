@@ -46,6 +46,8 @@ exports.run = function () {
 }
 ```
 
+To force a serverless-postgres `clean()`, you can call `knex.client.release()`.
+
 ## Contributing
 
 All contributions are welcome!

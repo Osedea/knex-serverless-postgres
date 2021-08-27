@@ -25,6 +25,10 @@ class ServerlessPostgresqlClient extends PostgresqlClient {
     return this.client;
   }
 
+  release() {
+    this.client.clean();
+  }
+
   releaseConnection(connection) {
     return connection.clean();
   }
