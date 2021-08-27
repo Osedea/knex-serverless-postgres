@@ -5,36 +5,26 @@ class ServerlessPostgresqlClient extends PostgresqlClient {
   constructor(config) {
     super(config);
 
-    this.serverlessConfig = {
-      ...config.connection,
-      ...(config.serverlessPostgres ?  config.serverlessPostgres : {}),
-    };
+    this.serverlessPostgres = config.serverlessPostgres;
   }
 
   get dialect() {
     return 'serverlessPostgres';
   }
-
   get driverName() {
     return 'serverlessPostgres';
   }
 
-  async acquireConnection() {
-    this.client = new ServerlessClient(this.serverlessConfig);
-    await this.client.connect();
-    return this.client;
+  acquireConnection() {
+    return Promise.resolve(this.serverlessPostgres);
   }
 
-  release() {
-    this.client.clean();
-  }
-
-  releaseConnection(connection) {
-    return connection.clean();
+  releaseConnection() {
+    return this.serverlessPostgres.clean();
   }
 
   destroy() {
-    return this.client.end();
+    return this.serverlessPostgres.end();
   }
 }
 

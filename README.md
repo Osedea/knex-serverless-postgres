@@ -27,26 +27,25 @@ npm install knex-serverless-postgres serverless-postgres
 const Knex = require('knex');
 const knexServerlesspostgres = require('knex-serverless-postgres');
 
+const serverlessPostgres = require('serverless-postgres')({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  debug: true,
+  delayMs: 3000
+});
+
 const knex = Knex({
   client: knexServerlesspostgres,
-  connection: {
-    host     : process.env.DB_HOST,
-    database : process.env.DB_DATABASE,
-    user     : process.env.DB_USERNAME,
-    password : process.env.DB_PASSWORD,
-  },
-  serverlessPostgres: {
-    debug: true,
-    delayMs: 3000,
-  }
+  serverlessPostgres,
 });
 
 exports.run = function () {
   return knex('table_name').where('id', 1);
 }
 ```
-
-To force a serverless-postgres `clean()`, you can call `knex.client.release()`.
 
 ## Contributing
 
