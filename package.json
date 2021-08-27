@@ -1,6 +1,6 @@
 {
   "name": "knex-serverless-postgres",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Knex.js dialect for serverless-postgres",
   "repository": "git@github.com:Osedea/knex-serverless-postgres.git",
   "author": "Adrien THIERY <adrien.thiery@osedea.com>",
